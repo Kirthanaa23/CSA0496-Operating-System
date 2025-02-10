@@ -1,0 +1,40 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;unistd.h&gt;
+#define NUM_PHILOSOPHERS 5
+void* philosopherLifeCycle(void* arg) {int id =
+*((int*)arg);
+
+int right_chopstick = (id + 1) % NUM_PHILOSOPHERS;
+while (1) {
+printf(&quot;Philosopher %d is thinking...\n&quot;, id);
+pthread_mutex_lock(&amp;chopsticks[left_chopstick]);
+pthread_mutex_lock(&amp;chopsticks[right_chopstick]);
+printf(&quot;Philosopher %d is eating...\n&quot;, id);
+sleep(rand() % 3 + 1);
+pthread_mutex_unlock(&amp;chopsticks[left_chopstick]);
+pthread_mutex_unlock(&amp;chopsticks[right_chopstick]);
+}
+}
+int main() {
+pthread_t philosophers[NUM_PHILOSOPHERS];int
+philosopher_ids[NUM_PHILOSOPHERS];
+for (int i = 0; i &lt; NUM_PHILOSOPHERS; ++i) {
+pthread_mutex_init(&amp;chopsticks[i], NULL);
+}
+for (int i = 0; i &lt; NUM_PHILOSOPHERS; ++i) {
+philosopher_ids[i] = i;
+pthread_create(&amp;philosophers[i],NULL, philosopherLifeCycle,
+(void*)&amp;philosopher_ids[i]);
+}
+for (int i =0;
+i &lt; NUM_PHILOSOPHERS; ++i) {
+
+pthread_join(philosophers[i], NULL);
+}
+for (int i = 0; i &lt; NUM_PHILOSOPHERS; ++i) {
+pthread_mutex_destroy(&amp;chopsticks[i]);
+}
+return 0;
+}
