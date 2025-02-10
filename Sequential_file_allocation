@@ -1,0 +1,53 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+struct Record {
+int recordNumber;
+char data[256];
+};
+int main() {
+FILE *file;
+struct Record record;
+int recordNumber;
+file = fopen(&quot;sequential_file.txt&quot;, &quot;w&quot;);
+if (file == NULL) {
+printf(&quot;Error opening the file.\n&quot;);
+return 1;
+}
+printf(&quot;Enter records (Enter &#39;0&#39; as record number to exit):\n&quot;);
+while (1)
+{
+printf(&quot;Record Number: &quot;);
+scanf(&quot;%d&quot;, &amp;record.recordNumber);
+if (record.recordNumber == 0) {
+break;
+}
+printf(&quot;Data: &quot;);
+scanf(&quot; %[^\n]&quot;, record.data);
+fwrite(&amp;record, sizeof(struct Record), 1, file);
+}
+fclose(file);
+file = fopen(&quot;sequential_file.txt&quot;, &quot;r&quot;);
+if (file == NULL) {
+printf(&quot;Error opening the file.\n&quot;);
+return 1;
+}
+while (1) {
+printf(&quot;Enter the record number to read (0 to exit): &quot;);
+
+scanf(&quot;%d&quot;, &amp;recordNumber);
+if (recordNumber == 0) {
+break;
+}
+while
+(fread(&amp;record, sizeof(struct Record), 1, file)) {
+printf(&quot;Record Number: %d\n&quot;, record.recordNumber);
+printf(&quot;Data: %s\n&quot;, record.data);
+if (record.recordNumber == recordNumber) {
+break;
+}
+}
+rewind(file);
+}
+fclose(file);
+return 0;
+}
