@@ -1,0 +1,83 @@
+#include &lt;stdio.h&gt;
+struct Process {
+int id; // Process ID
+int burst; // Burst time
+int waiting; // Waiting time
+int turnaround; // Turnaround time
+};
+void findWaitingTime(struct Process proc[], int n) {
+proc[0].waiting = 0; // The first process has no waiting time
+// Calculate waiting time for all processes
+for (int i = 1; i &lt; n; i++) {
+
+proc[i].waiting = proc[i - 1].waiting + proc[i - 1].burst;
+}
+}
+void findTurnaroundTime(struct Process proc[], int n) {
+// Calculate turnaround time for all processes
+for (int i = 0; i &lt; n; i++) {
+proc[i].turnaround = proc[i].burst + proc[i].waiting;
+}
+}
+void findAvgTime(struct Process proc[], int n) {
+float totalWaiting = 0, totalTurnaround = 0;
+// Calculate average waiting time and turnaround time
+for (int i = 0; i &lt; n; i++) {
+totalWaiting += proc[i].waiting;
+totalTurnaround += proc[i].turnaround;
+}
+printf(&quot;Average Waiting Time = %.2f\n&quot;, totalWaiting / n);
+printf(&quot;Average Turnaround Time = %.2f\n&quot;, totalTurnaround / n);
+}
+void sortByBurstTime(struct Process proc[], int n) {
+for (int i = 0; i &lt; n - 1; i++) {
+for (int j = i + 1; j &lt; n; j++) {
+if (proc[i].burst &gt; proc[j].burst) {
+struct Process temp = proc[i];
+proc[i] = proc[j];
+proc[j] = temp;
+}
+}
+}
+
+}
+
+int main() {
+int n;
+printf(&quot;Enter number of processes: &quot;);
+scanf(&quot;%d&quot;, &amp;n);
+struct Process proc[n];
+// Get burst time for processes
+for (int i = 0; i &lt; n; i++) {
+proc[i].id = i + 1;
+printf(&quot;Enter burst time for Process %d: &quot;, i + 1);
+scanf(&quot;%d&quot;, &amp;proc[i].burst);
+}
+// Sort processes based on burst time (Shortest Job First)
+sortByBurstTime(proc, n);
+findWaitingTime(proc, n);
+findTurnaroundTime(proc, n);
+findAvgTime(proc, n);
+// Output the process information
+printf(&quot;\nProcess\tBurst\tWaiting\tTurnaround\n&quot;);
+for (int i = 0; i &lt; n; i++) {
+printf(&quot;%d\t%d\t%d\t%d\n&quot;, proc[i].id, proc[i].burst, proc[i].waiting,
+proc[i].turnaround);
+}
+return 0;
+}
+
+INPUT:
+Enter number of processes: 3
+Enter burst time for Process 1: 6
+
+Enter burst time for Process 2: 8
+Enter burst time for Process 3: 7
+
+OUTPUT:
+Average Waiting Time = 6.00
+Average Turnaround Time = 14.00
+Process Burst Waiting Turnaround
+1 6 0 6
+3 7 6 13
+2 8 13 21
