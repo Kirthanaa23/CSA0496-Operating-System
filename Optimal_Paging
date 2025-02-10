@@ -1,0 +1,60 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#define MAX_FRAMES 3
+void printFrames(int frames[], int n) {
+for (int i = 0; i &lt; n; i++) {
+if (frames[i] == -1) {
+printf(&quot; - &quot;);
+} else {
+printf(&quot; %d &quot;, frames[i]);
+}
+}
+printf(&quot;\n&quot;);
+}
+int main() {
+int frames[MAX_FRAMES];
+for (int i = 0; i &lt; MAX_FRAMES; i++) { frames[i] = -1;
+}
+int pageFaults = 0;
+int referenceString[] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2};
+int n = sizeof(referenceString) / sizeof(referenceString[0]);
+printf(&quot;Reference String: &quot;);
+for (int i = 0; i &lt; n; i++) {
+printf(&quot;%d &quot;, referenceString[i]);
+}
+printf(&quot;\n\n&quot;);
+printf(&quot;Page Replacement Order:\n&quot;);
+for (int i = 0; i &lt; n; i++) {
+int page = referenceString[i];
+int pageFound = 0;
+for (int j = 0; j &lt; MAX_FRAMES; j++) {
+if (frames[j] == page) {
+pageFound = 1;
+break;
+}
+}
+
+if (!pageFound) {
+printf(&quot;Page %d -&gt; &quot;, page);
+int optimalPage = -1;
+int farthestDistance = 0;
+for (int j = 0; j &lt; MAX_FRAMES; j++) {
+int futureDistance = 0;
+for (int k = i + 1; k &lt; n; k++) {
+if (referenceString[k] == frames[j]) {
+break;
+}
+futureDistance++;
+}
+if (futureDistance &gt; farthestDistance) {
+farthestDistance = futureDistance;
+optimalPage = j;
+}
+}frames[optimalPage] = page;
+printFrames(frames, MAX_FRAMES);
+pageFaults++;
+}
+}
+printf(&quot;\nTotal Page Faults: %d\n&quot;, pageFaults);
+return 0;
+}
