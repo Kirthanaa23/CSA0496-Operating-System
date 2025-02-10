@@ -1,0 +1,32 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/msg.h&gt;
+struct message {
+long msg_type;
+char msg_text[100];
+};
+int main() {
+key_t key = ftok(&quot;msgqfile&quot;, 65);
+int msgid =msgget(key, IPC_CREAT | 0666);
+if (msgid == -1) {
+exit(EXIT_FAILURE);
+}
+msg.msg_type = 1;
+strcpy(msg.msg_text, &quot;Hello, message queue!&quot;);
+if (msgsnd(msgid, (void*)&amp;msg, sizeof(msg.msg_text),
+IPC_NOWAIT) == -1) {
+exit(EXIT_FAILURE);
+}
+if (msgrcv(msgid, (void*)&amp;msg, sizeof(msg.msg_text), 1, 0) == -1) {
+
+perror(&quot;msgrcv&quot;);
+printf(&quot;Consumer: Data received from message queue: %s\n&quot;,msg.msg_text);
+if (msgctl(msgid, IPC_RMID, NULL) == -1) {
+exit(EXIT_FAILURE);
+}
+return 0;
+}
