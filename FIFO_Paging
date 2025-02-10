@@ -1,0 +1,47 @@
+#include &lt;stdio.h&gt;
+#define MAX_FRAMES 3
+void printFrames(int frames[], int n) {
+for (int i = 0; i &lt; n; i++) {
+if (frames[i] == -1) {
+printf(&quot; - &quot;);
+}
+else {
+printf(&quot; %d &quot;, frames[i]);
+}
+}
+printf(&quot;\n&quot;);
+}
+int main() {
+int referenceString[] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2};
+int n =sizeof(referenceString) / sizeof(referenceString[0]);
+int frames[MAX_FRAMES];
+int framePointer = 0;
+for (int i = 0; i &lt; MAX_FRAMES; i++)
+{
+frames[i] = -1;
+}
+printf(&quot;Reference String: &quot;);
+for (int i = 0; i &lt; n; i++) {
+printf(&quot;%d &quot;, referenceString[i]);
+}
+printf(&quot;\n\n&quot;);
+printf(&quot;Page Replacement Order:\n&quot;);
+for (int i = 0; i &lt; n; i++) {
+int page = referenceString[i];
+int pageFound = 0;
+for (int j = 0; j &lt; MAX_FRAMES; j++) {
+if (frames[j] == page) {
+pageFound = 1;
+break;
+
+}
+}
+if (!pageFound) {
+printf(&quot;Page %d -&gt; &quot;, page);
+frames[framePointer] = page;
+framePointer = (framePointer + 1) % MAX_FRAMES;
+printFrames(frames, MAX_FRAMES);
+}
+}
+return 0;
+}
