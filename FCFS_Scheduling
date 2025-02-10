@@ -1,0 +1,73 @@
+#include &lt;stdio.h&gt;
+struct Process {
+int id; // Process ID
+int arrival; // Arrival time
+int burst; // Burst time
+int waiting; // Waiting time
+int turnaround; // Turnaround time
+};
+void findWaitingTime(struct Process proc[], int n) {
+proc[0].waiting = 0; // The first process has no waiting time
+// Calculate waiting time for all processes
+for (int i = 1; i &lt; n; i++) {
+proc[i].waiting = proc[i - 1].waiting + proc[i - 1].burst;
+}
+}
+void findTurnaroundTime(struct Process proc[], int n) {
+// Calculate turnaround time for all processes
+for (int i = 0; i &lt; n; i++) {
+proc[i].turnaround = proc[i].burst + proc[i].waiting;
+}
+}
+void findAvgTime(struct Process proc[], int n) {
+float totalWaiting = 0, totalTurnaround = 0;
+// Calculate average waiting time and turnaround time
+for (int i = 0; i &lt; n; i++) {
+totalWaiting += proc[i].waiting;
+
+totalTurnaround += proc[i].turnaround;
+}
+printf(&quot;Average Waiting Time = %.2f\n&quot;, totalWaiting / n);
+printf(&quot;Average Turnaround Time = %.2f\n&quot;, totalTurnaround / n);
+}
+int main() {
+int n;
+printf(&quot;Enter number of processes: &quot;);
+scanf(&quot;%d&quot;, &amp;n);
+struct Process proc[n];
+// Get process information from user
+for (int i = 0; i &lt; n; i++) {
+proc[i].id = i + 1;
+printf(&quot;Enter arrival time for Process %d: &quot;, i + 1);
+scanf(&quot;%d&quot;, &amp;proc[i].arrival);
+printf(&quot;Enter burst time for Process %d: &quot;, i + 1);
+scanf(&quot;%d&quot;, &amp;proc[i].burst);
+}
+findWaitingTime(proc, n);
+findTurnaroundTime(proc, n);
+findAvgTime(proc, n);
+// Output the process information
+printf(&quot;\nProcess\tArrival\tBurst\tWaiting\tTurnaround\n&quot;);
+for (int i = 0; i &lt; n; i++) {
+printf(&quot;%d\t%d\t%d\t%d\t%d\n&quot;, proc[i].id, proc[i].arrival, proc[i].burst, proc[i].waiting,
+proc[i].turnaround);
+}
+return 0;
+}
+
+INPUT:
+Enter number of processes: 3
+Enter arrival time for Process 1: 0
+Enter burst time for Process 1: 5
+Enter arrival time for Process 2: 1
+Enter burst time for Process 2: 3
+Enter arrival time for Process 3: 2
+Enter burst time for Process 3: 8
+
+OUTPUT:
+Average Waiting Time = 4.00
+Average Turnaround Time = 8.67
+Process Arrival Burst Waiting Turnaround
+1 0 5 0 5
+2 1 3 5 8
+3 2 8 8 16
